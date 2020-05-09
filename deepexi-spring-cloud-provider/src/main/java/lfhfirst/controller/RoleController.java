@@ -5,12 +5,12 @@ import io.swagger.annotations.ApiParam;
 import lfhfirst.model.dto.RoleDTO;
 import lfhfirst.model.vo.RoleVO;
 import lfhfirst.service.RoleService;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/roles")
@@ -36,6 +36,12 @@ public class RoleController {
     @PutMapping
     public RoleVO update(@ApiParam(value = "角色信息") @RequestBody RoleDTO roleDTO){
         return roleService.update(roleDTO);
+    }
+
+    @ApiOperation(value = "获取某个角色的详细信息")
+    @GetMapping("/{roleId}")
+    public List<RoleVO> getList(@ApiParam(value = "角色ID")@PathVariable Integer roleId){
+        return roleService.getList(roleId);
     }
 
 }

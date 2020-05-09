@@ -23,4 +23,5 @@ public class UserVO {
     private String tel;
     private Date entryTime;
     private Integer parentId;
+    private List<RoleVO> roleVOList;
 }

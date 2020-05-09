@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lfhfirst.domain.entity.User;
 import lfhfirst.model.dto.UserAndRoleIntermediateDTO;
+import lfhfirst.model.dto.UserCreateDTO;
 import lfhfirst.model.entity.UserAndRoleIntermediateDO;
 import lfhfirst.model.entity.UserDO;
 import lfhfirst.model.vo.UserAndRoleIntermediateVO;
@@ -26,14 +27,17 @@ public class UserServiceImpl implements UserService {
     private UserManager userManager;
 
     @Override
-    public Integer create(UserDTO userDTO) {
+    public Integer create(UserCreateDTO userDTO) {
+        //判断该用户下是否有父ID
+        //没有默认为1
         Integer userId = userManager
                 .current()
-                .createCus(convert(userDTO, User.UserCreate.class));
+                .create(userDTO);
         for (Integer roleId:userDTO.getRoleIds()){
             //插入用户-角色中间表
             userManager
                     .current()
+                    .getUserAndRoleIntermediate()
                     .createUserAndRoleIntermediate(new UserAndRoleIntermediateDTO(userId,roleId));
         }
         return userId;
@@ -41,18 +45,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Integer userId) {
+        //删除用户-角色中间表数据
         userManager
                 .current()
+                .getUserAndRoleIntermediate()
                 .removeRoleAndAuthIntermediateByUserId(userId);
 
+        //判断该用户是否有下一级 List<UserVO> = getUserListByParentId(userId);
+        //List.size > 0 遍历，将这些用户的父ID改为1
         userManager
                 .current()
                 .delete(userId);
     }
 
     @Override
-    public UserVO update(UserDTO userDTO) {
-        return null;
+    public Integer update(UserDTO userDTO) {
+        return userManager
+                .current()
+                .update(userDTO);
     }
 
     @Override
@@ -66,7 +76,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserVO nameAndUserMatch(UserDTO userDTO) {
+    public UserVO NameAndUserMatch(UserDTO userDTO) {
         return userManager
                 .current()
                 .nameAndUserMatch(userDTO);

@@ -2,7 +2,11 @@ package lfhfirst.domain.entity;
 
 import lfhfirst.model.dto.UserAndRoleIntermediateDTO;
 import lfhfirst.model.entity.UserAndRoleIntermediateDO;
+import lfhfirst.model.vo.RoleVO;
+import lfhfirst.model.vo.UserVO;
 import lfhfirst.repo.UserAndRoleIntermediateRepository;
+
+import java.util.List;
 
 import static com.deepexi.pojo.converter.utils.ConverterUtils.convert;
 
@@ -24,5 +28,11 @@ public class UserAndRoleIntermediate {
 
     public void removeRoleAndAuthIntermediateByUserId(Integer userId) {
         userAndRoleIntermediateRepository.removeByUserId(userId);
+    }
+
+    public List<UserVO> getListByRoleId(Integer roleId) {
+        //找到对应的角色ID
+        //遍历找到用户信息
+        return null;
     }
 }

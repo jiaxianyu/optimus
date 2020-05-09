@@ -2,20 +2,12 @@ package lfhfirst.domain.entity;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lfhfirst.manager.UserManager;
-import lfhfirst.model.dto.RoleDTO;
-import lfhfirst.model.dto.UserAndRoleIntermediateDTO;
+import lfhfirst.model.dto.UserCreateDTO;
 import lfhfirst.model.dto.UserDTO;
-import lfhfirst.model.entity.RoleDO;
-import lfhfirst.model.entity.UserAndRoleIntermediateDO;
 import lfhfirst.model.entity.UserDO;
-import lfhfirst.model.vo.RoleVO;
 import lfhfirst.model.vo.UserVO;
-import lfhfirst.repo.RoleRepository;
-import lfhfirst.repo.UserAndRoleIntermediateRepository;
 import lfhfirst.repo.UserRepository;
-import lfhfirst.service.RoleService;
 import lombok.Data;
-import org.bouncycastle.asn1.cms.ecc.MQVuserKeyingMaterial;
 
 import java.util.List;
 
@@ -29,12 +21,8 @@ public class User {
         this.userRepository = repository;
     }
 
-    public Integer createCus(UserCreate vo) {
-        return userRepository.create(convert(vo, UserDO.class));
-    }
-
-    public UserVO update(UserCreate vo) {
-        return null;
+    public Integer update(UserDTO userDTO) {
+        return userRepository.update(convert(userDTO,UserDO.class));
     }
 
     public void delete(Integer id) {
@@ -59,8 +47,12 @@ public class User {
     public UserVO nameAndUserMatch(UserDTO userDTO) {
         QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name",userDTO.getName())
-                .eq("pawword",userDTO.getPassword());
+                .eq("password",userDTO.getPassword());
         return convert(userRepository.nameAndUserMatch(queryWrapper),UserVO.class);
+    }
+
+    public Integer create(UserCreateDTO userCreateDTO) {
+        return  userRepository.create(convert(userCreateDTO,UserDO.class));
     }
 
     public Role getRole() {
@@ -70,8 +62,13 @@ public class User {
         return new UserAndRoleIntermediate();
     }
 
+    public RoleAndPermissionIntermediate getRoleAndPermissionIntermediate() {
+        return  new RoleAndPermissionIntermediate();
+    }
+
     @Data
     public static class UserCreate {
+
         private Integer id;
         private String password;
         private String name;
