@@ -1,0 +1,11 @@
+eureka:
+  client:
+    enabled: false
+    fetch-registry: true
+    register-with-eureka: false
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: 'jdbc:mysql://127.0.0.1:3306/db_name'
+
